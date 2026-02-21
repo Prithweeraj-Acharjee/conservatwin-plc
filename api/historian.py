@@ -17,9 +17,14 @@ import time
 from pathlib import Path
 from typing import List, Optional, Dict, Any
 
+import os
+
 logger = logging.getLogger("api.historian")
 
-DB_PATH = Path(__file__).parent.parent / "historian.db"
+# DATA_DIR env var allows Railway volume persistence:
+#   Set DATA_DIR=/data in Railway, mount a volume at /data
+_data_dir = Path(os.environ.get("DATA_DIR", str(Path(__file__).parent.parent)))
+DB_PATH = _data_dir / "historian.db"
 
 # Keep at most this many days of data (prune on startup)
 PRUNE_KEEP_DAYS = 7

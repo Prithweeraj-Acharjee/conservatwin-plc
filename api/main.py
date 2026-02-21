@@ -86,6 +86,22 @@ async def lifespan(app: FastAPI):
     logger.info("ConservaTwin PLC system offline")
 
 
+import os
+
+app = FastAPI(title="ConservaTwin PLC API", version="1.0.0", lifespan=lifespan)
+
+# ── CORS — allow Vercel frontend + localhost dev ───────────────────────────────
+_raw_origins = os.environ.get(
+    "ALLOWED_ORIGINS",
+    "http://localhost:3000,https://hmi-sepia.vercel.app"
+)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[o.strip() for o in _raw_origins.split(",")],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # ── Alarm tag → (zone letter, human description, severity) ────────────────────
 _ALARM_META: dict[str, tuple[str, str, str]] = {
