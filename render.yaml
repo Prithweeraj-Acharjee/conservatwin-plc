@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: conservatwin-plc-api
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn api.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    envVars:
+      - key: DATA_DIR
+        value: /data
+      - key: ALLOWED_ORIGINS
+        value: https://hmi-sepia.vercel.app,http://localhost:3000
+    disk:
+      name: historian-data
+      mountPath: /data
+      sizeGB: 1
