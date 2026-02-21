@@ -1,0 +1,215 @@
+@import "tailwindcss";
+
+/* ─── ConservaTwin — Museum CSS Variables ───────────────────────────────── */
+:root {
+  /* Background surfaces — warm near-black */
+  --bg-primary: #0e0d0b;
+  --bg-secondary: #141210;
+  --bg-card: #1a1714;
+  --bg-elevated: #201d19;
+  --bg-panel: #131110;
+
+  /* Borders */
+  --border: #2a2520;
+  --border-bright: #3d342a;
+  --border-brass: #6b5a38;
+
+  /* Brass / Gold — primary accent */
+  --brass: #c4a35a;
+  --brass-dim: #7a6335;
+  --brass-glow: rgba(196, 163, 90, 0.08);
+  --brass-subtle: rgba(196, 163, 90, 0.12);
+
+  /* Text — warm off-white hierarchy */
+  --text-primary: #e8e0d0;
+  --text-secondary: #8a7f6e;
+  --text-dim: #4a4438;
+  --text-brass: #c4a35a;
+
+  /* Status — desaturated, calm */
+  --green: #6a9e6a;
+  /* normal / stable */
+  --green-dim: rgba(106, 158, 106, 0.10);
+  --green-mid: #4a7a4a;
+  --amber: #c4834a;
+  /* warning */
+  --amber-dim: rgba(196, 131, 74, 0.10);
+  --red: #a04040;
+  /* critical */
+  --red-dim: rgba(160, 64, 64, 0.12);
+  --blue: #5a8aa0;
+  --blue-dim: rgba(90, 138, 160, 0.10);
+
+  /* Gauge track */
+  --gauge-track: #251f18;
+
+  /* Typography */
+  --font-heading: 'Josefin Sans', 'Inter', sans-serif;
+  --font-body: 'Inter', 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+  --font-hmi: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  height: 100%;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 13px;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Scrollbars */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-bright);
+  border-radius: 2px;
+}
+
+/* ─── Utility classes ───────────────────────────────────────────────────── */
+.mono {
+  font-family: var(--font-mono);
+}
+
+.heading {
+  font-family: var(--font-heading);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.label-dim {
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 10px;
+  font-weight: 500;
+}
+
+.value-green {
+  color: var(--green);
+  font-family: var(--font-mono);
+}
+
+.value-amber {
+  color: var(--amber);
+  font-family: var(--font-mono);
+}
+
+.value-red {
+  color: var(--red);
+  font-family: var(--font-mono);
+}
+
+.bit-on {
+  color: var(--green);
+}
+
+.bit-off {
+  color: var(--text-dim);
+}
+
+.brass {
+  color: var(--brass);
+}
+
+/* ─── Keyframes ─────────────────────────────────────────────────────────── */
+
+/* Slow alarm pulse — max 0.8 Hz (well under 1.5 Hz constraint) */
+@keyframes alarm-pulse {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.45;
+  }
+}
+
+.alarm-pulse {
+  animation: alarm-pulse 1.25s ease-in-out infinite;
+}
+
+/* Gentle LED indicator */
+@keyframes led-breathe {
+
+  0%,
+  100% {
+    opacity: 1;
+    box-shadow: 0 0 4px currentColor;
+  }
+
+  50% {
+    opacity: 0.6;
+    box-shadow: 0 0 2px currentColor;
+  }
+}
+
+.led-pulse {
+  animation: led-breathe 2s ease-in-out infinite;
+}
+
+/* Alarm strip — very slow flash */
+@keyframes alarm-strip {
+
+  0%,
+  100% {
+    background: rgba(160, 64, 64, 0.10);
+  }
+
+  50% {
+    background: rgba(160, 64, 64, 0.20);
+  }
+}
+
+.alarm-flash {
+  animation: alarm-strip 1.25s ease-in-out infinite;
+}
+
+/* Curator fade-in panels */
+@keyframes panel-rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.panel-rise {
+  animation: panel-rise 0.6s ease forwards;
+}
+
+/* Mode transition */
+@keyframes mode-fade {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.mode-fade {
+  animation: mode-fade 0.35s ease;
+}

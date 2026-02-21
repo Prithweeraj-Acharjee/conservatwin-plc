@@ -1,0 +1,50 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+.eggs/
+.venv/
+venv/
+env/
+.env
+
+# Historian database (large binary, generated at runtime)
+historian.db
+historian.db-shm
+historian.db-wal
+*.db-shm
+*.db-wal
+
+# Test output
+tests/test_report.json
+tests/test_report.html
+
+# Logs
+*.log
+backend.log
+
+# HMI
+hmi/node_modules/
+hmi/.next/
+hmi/out/
+hmi/.env.local
+hmi/.env*.local
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Byte-compiled
+*.pyc
