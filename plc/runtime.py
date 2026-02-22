@@ -148,11 +148,21 @@ class PLCRuntime:
             elapsed_ms = (time.perf_counter() - t_start) * 1000.0
 
             # Watchdog overrun check
-            self.watchdog.update(elapsed_ms)
+            is_overrun = elapsed_ms > self.watchdog.max_scan_ms
+            global_ack = self.mem.M.read_bit(*M.GLOBAL_ACK)
+            
+            # Watchdog FB update returns True if tripped
+            tripped = self.watchdog.update(elapsed_ms)
+            
+            # Alarm latch update: SET if tripped, ACK if global ack pressed
+            # Note: watchdog condition remains until it is not overrun
+            self.alarms.watchdog.update(SET=tripped, ACK=global_ack)
+            
             if self.watchdog.tripped:
-                self.alarms.watchdog.update(SET=True, ACK=False)
                 self.mem.M.write_bit(*M.WATCHDOG_ALARM, True)
                 logger.warning(f"WATCHDOG TRIPPED — scan took {elapsed_ms:.1f}ms")
+            else:
+                self.mem.M.write_bit(*M.WATCHDOG_ALARM, False)
 
             # Sleep for remainder of scan interval
             remaining = self.scan_interval_s - (elapsed_ms / 1000.0)
@@ -301,7 +311,7 @@ class PLCRuntime:
         """Assert acknowledge bit for a zone alarm via M bit."""
         zone = zone.upper()
         ack_map = {'A': M.A_ALARM_ACK, 'B': M.B_ALARM_ACK, 'C': M.C_ALARM_ACK}
-        if zone == 'ALL':
+        if zone == 'ALL' or zone == 'SYS':
             self.mem.M.write_bit(*M.GLOBAL_ACK, True)
         elif zone in ack_map:
             self.mem.M.write_bit(*ack_map[zone], True)

@@ -24,8 +24,9 @@ def execute(mem, alarms, dt: float) -> bool:
     fire_alarm = mem.I.read_bit(*I.FIRE_ALARM)
 
     estop_active = hw_estop or sw_estop or fire_alarm
+    global_ack = mem.M.read_bit(*M.GLOBAL_ACK)
 
-    alarms.estop.update(SET=estop_active, ACK=False)   # E-Stop never auto-acks
+    alarms.estop.update(SET=estop_active, ACK=global_ack)
 
     if estop_active:
         _force_safe_state(mem)
