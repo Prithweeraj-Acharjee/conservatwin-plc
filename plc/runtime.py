@@ -152,17 +152,25 @@ class PLCRuntime:
             global_ack = self.mem.M.read_bit(*M.GLOBAL_ACK)
             
             # Watchdog FB update returns True if tripped
-            tripped = self.watchdog.update(elapsed_ms)
+            self.watchdog.update(elapsed_ms)
             
-            # Alarm latch update: SET if tripped, ACK if global ack pressed
-            # Note: watchdog condition remains until it is not overrun
-            self.alarms.watchdog.update(SET=tripped, ACK=global_ack)
+            # Alarm latch update: 
+            # SET: use instant overrun state so latch can clear when normal
+            # ACK: if global ack, also reset the internal watchdog block
+            if global_ack:
+                self.watchdog.reset()
             
-            if self.watchdog.tripped:
+            self.alarms.watchdog.update(SET=is_overrun, ACK=global_ack)
+            
+            if self.watchdog.tripped or self.alarms.watchdog.Q:
                 self.mem.M.write_bit(*M.WATCHDOG_ALARM, True)
-                logger.warning(f"WATCHDOG TRIPPED — scan took {elapsed_ms:.1f}ms")
+                if is_overrun:
+                    logger.warning(f"WATCHDOG TRIPPED — scan took {elapsed_ms:.1f}ms")
             else:
                 self.mem.M.write_bit(*M.WATCHDOG_ALARM, False)
+
+            # Clear any temporary pulse bits (ACKs) at end of scan
+            self.clear_ack()
 
             # Sleep for remainder of scan interval
             remaining = self.scan_interval_s - (elapsed_ms / 1000.0)

@@ -88,17 +88,16 @@ async def lifespan(app: FastAPI):
 
 import os
 
-app = FastAPI(title="ConservaTwin PLC API", version="1.0.0", lifespan=lifespan)
-
-# ── CORS — allow Vercel frontend + localhost dev ───────────────────────────────
-_raw_origins = os.environ.get(
-    "ALLOWED_ORIGINS",
-    "http://localhost:3000,https://hmi-sepia.vercel.app"
+app = FastAPI(
+    title="ConservaTwin PLC",
+    description="PLC-authentic digital twin for museum conservation",
+    version="1.0.0",
+    lifespan=lifespan,
 )
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[o.strip() for o in _raw_origins.split(",")],
-    allow_credentials=True,
+    allow_origins=["*"],
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -201,22 +200,6 @@ async def _broadcast(snap: ScanSnapshot, plant_display: dict):
 
 
 
-# ─── App ──────────────────────────────────────────────────────────────────────
-app = FastAPI(
-    title="ConservaTwin PLC",
-    description="PLC-authentic digital twin for museum conservation",
-    version="1.0.0",
-    lifespan=lifespan,
-)
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-
 # ─── WebSocket ────────────────────────────────────────────────────────────────
 
 @app.websocket("/ws")
@@ -297,11 +280,6 @@ async def ack_alarm(cmd: AlarmAckCommand):
     if not plc:
         raise HTTPException(503, "PLC not running")
     plc.ack_alarm(cmd.zone)
-    # ACK bit is a pulse — clear it after next scan
-    async def clear_ack():
-        await asyncio.sleep(plc.scan_interval_s * 2)
-        plc.clear_ack()
-    asyncio.create_task(clear_ack())
     return {"ok": True, "zone": cmd.zone}
 
 
