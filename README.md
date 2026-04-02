@@ -26,3 +26,47 @@ Rather than relying only on threshold alarms, ConservaTwin introduces a **Preser
 - **Zone-Based Monitoring** - independent control for different gallery environments
 - **Risk-Aware Decision Making** - alerts based on PRI thresholds, not just raw sensor values
 
+---
+
+## PRI Calculation
+
+The Preservation Risk Index combines three factors:
+
+```
+PRI = w1 * Deviation + w2 * Instability + w3 * RateOfChange
+
+Where:
+  Deviation   = |current - optimal| / tolerance
+  Instability = std_dev(readings) over time window
+  RateOfChange = |delta| per unit time
+```
+
+This enables risk-aware conservation decisions that account for both acute and chronic environmental threats.
+
+---
+
+## Architecture
+
+```
+Simulated Sensors (Temp + RH per zone)
+              |
+              v
+      PID Controller
+     /        |        \
+  Zone 1    Zone 2    Zone N
+     \        |        /
+              v
+      PRI Risk Engine
+              |
+              v
+      SCADA HMI Dashboard
+```
+
+---
+
+## Tech Stack
+
+<div align="center">
+
+| Category | Technology |
+|
