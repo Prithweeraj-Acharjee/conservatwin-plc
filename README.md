@@ -69,4 +69,46 @@ Simulated Sensors (Temp + RH per zone)
 <div align="center">
 
 | Category | Technology |
-|
+|----------|-----------|
+| **Language** | Python |
+| **Control** | PID Controllers |
+| **Interface** | SCADA HMI |
+| **Modeling** | Digital Twin Simulation |
+| **Visualization** | Matplotlib, Plotly |
+
+</div>
+
+---
+
+## Getting Started
+
+```bash
+# Clone the repository
+git clone https://github.com/Prithweeraj-Acharjee/conservatwin-plc.git
+cd conservatwin-plc
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Run the simulation
+python main.py
+```
+
+---
+
+## Author
+
+**Prithweeraj Acharjee Porag**
+
+[![GitHub](https://img.shields.io/badge/GitHub-Prithweeraj--Acharjee-181717?style=flat-square&logo=github)](https://github.com/Prithweeraj-Acharjee)
+[![Portfolio](https://img.shields.io/badge/Portfolio-prithwee.vercel.app-000000?style=flat-square&logo=vercel)](https://prithwee.vercel.app)
+
+---
+
+## License
+
+This project is open source and available under the [MIT License](LICENSE).
+
+<div align="center">
+<img src="https://capsule-render.vercel.app/api?type=waving&color=0:0d1117,50:161b22,100:1f6feb&height=100&section=footer" width="100%" />
+</div>
